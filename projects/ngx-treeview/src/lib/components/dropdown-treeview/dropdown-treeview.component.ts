@@ -7,9 +7,10 @@ import { TreeviewHeaderTemplateContext } from '../../models/treeview-header-temp
 import { TreeviewItemTemplateContext } from '../../models/treeview-item-template-context';
 
 @Component({
-  selector: 'ngx-dropdown-treeview',
-  templateUrl: './dropdown-treeview.component.html',
-  styleUrls: ['./dropdown-treeview.component.scss']
+    selector: 'ngx-dropdown-treeview',
+    templateUrl: './dropdown-treeview.component.html',
+    styleUrls: ['./dropdown-treeview.component.scss'],
+    standalone: false
 })
 export class DropdownTreeviewComponent {
   @Input() buttonClass = 'btn-outline-secondary';

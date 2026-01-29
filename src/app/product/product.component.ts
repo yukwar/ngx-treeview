@@ -15,14 +15,15 @@ export class ProductTreeviewConfig extends TreeviewConfig {
 }
 
 @Component({
-  selector: 'ngx-product',
-  styleUrls: ['./product.component.scss'],
-  templateUrl: './product.component.html',
-  providers: [
-    ProductService,
-    { provide: TreeviewEventParser, useClass: OrderDownlineTreeviewEventParser },
-    { provide: TreeviewConfig, useClass: ProductTreeviewConfig }
-  ]
+    selector: 'ngx-product',
+    styleUrls: ['./product.component.scss'],
+    templateUrl: './product.component.html',
+    providers: [
+        ProductService,
+        { provide: TreeviewEventParser, useClass: OrderDownlineTreeviewEventParser },
+        { provide: TreeviewConfig, useClass: ProductTreeviewConfig }
+    ],
+    standalone: false
 })
 export class ProductComponent implements OnInit {
   @ViewChild(TreeviewComponent, { static: false }) treeviewComponent: TreeviewComponent;

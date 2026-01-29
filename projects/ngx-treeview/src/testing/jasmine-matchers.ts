@@ -7,11 +7,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-
-import { ɵglobal as global } from '@angular/core';
-import { ɵgetDOM as getDOM } from '@angular/platform-browser';
-
-
+/* tslint:disable:no-any */
 
 /**
  * Jasmine matchers that check Angular specific conditions.
@@ -24,28 +20,16 @@ export interface NgMatchers extends jasmine.Matchers<any> {
 
     /**
      * Expect the value to be a `Promise`.
-     *
-     * ## Example
-     *
-     * {@example testing/ts/matchers.ts region='toBePromise'}
      */
     toBePromise(): boolean;
 
     /**
      * Expect the value to be an instance of a class.
-     *
-     * ## Example
-     *
-     * {@example testing/ts/matchers.ts region='toBeAnInstanceOf'}
      */
     toBeAnInstanceOf(expected: any): boolean;
 
     /**
      * Expect the element to have exactly the given text.
-     *
-     * ## Example
-     *
-     * {@example testing/ts/matchers.ts region='toHaveText'}
      */
     toHaveText(expected: string): boolean;
 
@@ -53,54 +37,33 @@ export interface NgMatchers extends jasmine.Matchers<any> {
 
     /**
      * Expect the element to have the given CSS class.
-     *
-     * ## Example
-     *
-     * {@example testing/ts/matchers.ts region='toHaveCssClass'}
      */
     toHaveCssClass(expected: string): boolean;
 
     /**
      * Expect the element to have the given CSS styles.
-     *
-     * ## Example
-     *
-     * {@example testing/ts/matchers.ts region='toHaveCssStyle'}
      */
     toHaveCssStyle(expected: { [k: string]: string } | string): boolean;
 
     /**
      * Expect a class to implement the interface of the given class.
-     *
-     * ## Example
-     *
-     * {@example testing/ts/matchers.ts region='toImplement'}
      */
     toImplement(expected: any): boolean;
 
     /**
      * Expect an exception to contain the given error text.
-     *
-     * ## Example
-     *
-     * {@example testing/ts/matchers.ts region='toContainError'}
      */
     toContainError(expected: any): boolean;
 
     toHaveMap(expected: { [k: string]: any }): boolean;
 }
 
-const _global = <any>(typeof window === 'undefined' ? global : window);
+const _global = <any>(typeof window === 'undefined' ? globalThis : window);
 
 /**
  * Jasmine matching function with Angular matchers mixed in.
- *
- * ## Example
- *
- * {@example testing/ts/matchers.ts region='toHaveText'}
  */
 export const expect: (actual: any) => NgMatchers = <any>_global.expect;
-
 
 // Some Map polyfills don't polyfill Map.toString correctly, which
 // gives us bad error messages in tests.
@@ -122,7 +85,10 @@ _global.beforeEach(function () {
         toEqual: function (util) {
             return {
                 compare: function (actual: any, expected: any) {
-                    return { pass: util.equals(actual, expected, [compareMap]) };
+                    if (actual instanceof Map) {
+                        return { pass: compareMap(actual, expected) };
+                    }
+                    return { pass: util.equals(actual, expected) };
                 }
             };
 
@@ -134,7 +100,6 @@ _global.beforeEach(function () {
                     }
                     return pass;
                 } else {
-                    // TODO(misko): we should change the return, but jasmine.d.ts is not null safe
                     // tslint:disable-next-line:no-non-null-assertion
                     return undefined!;
                 }
@@ -193,8 +158,9 @@ _global.beforeEach(function () {
 
             function buildError(isNot: boolean) {
                 return function (actual: any, className: string) {
+                    const hasClass = !!actual?.classList?.contains(className);
                     return {
-                        pass: getDOM().hasClass(actual, className) === !isNot,
+                        pass: hasClass === !isNot,
                         get message() {
                             return `Expected ${actual.outerHTML} ${isNot ? 'not ' : ''}to contain the CSS class "${className}"`;
                         }
@@ -206,13 +172,16 @@ _global.beforeEach(function () {
         toHaveCssStyle: function () {
             return {
                 compare: function (actual: any, styles: { [k: string]: string } | string) {
+                    const computed = actual ? getComputedStyle(actual) : null;
                     let allPassed: boolean;
                     if (typeof styles === 'string') {
-                        allPassed = getDOM().hasStyle(actual, styles);
+                        allPassed = !!computed?.getPropertyValue(styles);
                     } else {
                         allPassed = Object.keys(styles).length !== 0;
                         Object.keys(styles).forEach(prop => {
-                            allPassed = allPassed && getDOM().hasStyle(actual, prop, styles[prop]);
+                            const expectedValue = styles[prop];
+                            const actualValue = computed?.getPropertyValue(prop)?.trim();
+                            allPassed = allPassed && actualValue === expectedValue;
                         });
                     }
 
@@ -306,7 +275,7 @@ _global.beforeEach(function () {
 
 function elementText(n: any): string {
     const hasNodes = (node: any) => {
-        const children = getDOM().childNodes(node);
+        const children = node?.childNodes;
         return children && children.length > 0;
     };
 
@@ -314,22 +283,22 @@ function elementText(n: any): string {
         return n.map(elementText).join('');
     }
 
-    if (getDOM().isCommentNode(n)) {
+    if (n?.nodeType === Node.COMMENT_NODE) {
         return '';
     }
 
-    if (getDOM().isElementNode(n) && getDOM().tagName(n) === 'CONTENT') {
-        return elementText(Array.prototype.slice.apply(getDOM().getDistributedNodes(n)));
+    if (n?.nodeType === Node.ELEMENT_NODE && n.tagName === 'CONTENT') {
+        const distributedNodes = n.getDistributedNodes ? n.getDistributedNodes() : [];
+        return elementText(Array.prototype.slice.apply(distributedNodes));
     }
 
-    if (getDOM().hasShadowRoot(n)) {
-        return elementText(getDOM().childNodesAsList(getDOM().getShadowRoot(n)));
+    if (n?.shadowRoot) {
+        return elementText(Array.from(n.shadowRoot.childNodes));
     }
 
     if (hasNodes(n)) {
-        return elementText(getDOM().childNodesAsList(n));
+        return elementText(Array.from(n.childNodes));
     }
 
-    // tslint:disable-next-line:no-non-null-assertion
-    return getDOM().getText(n)!;
+    return n?.textContent ?? '';
 }

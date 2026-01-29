@@ -4,12 +4,13 @@ import { City, CityService } from './city.service';
 import { CityTreeviewI18n } from './city-treeview-i18n';
 
 @Component({
-  selector: 'ngx-city',
-  templateUrl: './city.component.html',
-  providers: [
-    CityService,
-    { provide: TreeviewI18n, useClass: CityTreeviewI18n }
-  ]
+    selector: 'ngx-city',
+    templateUrl: './city.component.html',
+    providers: [
+        CityService,
+        { provide: TreeviewI18n, useClass: CityTreeviewI18n }
+    ],
+    standalone: false
 })
 export class CityComponent implements OnInit {
   @ViewChild(DropdownTreeviewComponent, { static: false }) dropdownTreeviewComponent: DropdownTreeviewComponent;

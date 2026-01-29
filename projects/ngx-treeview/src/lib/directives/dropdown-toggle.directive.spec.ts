@@ -7,8 +7,9 @@ import { DropdownDirective } from './dropdown.directive';
 import { expect, createGenericTestComponent } from '../../testing';
 
 @Component({
-  selector: 'ngx-test',
-  template: ''
+    selector: 'ngx-test',
+    template: '',
+    standalone: false
 })
 class TestComponent { }
 

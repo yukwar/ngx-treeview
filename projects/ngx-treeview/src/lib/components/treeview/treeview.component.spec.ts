@@ -1,5 +1,5 @@
 ﻿import { Component, DebugElement } from '@angular/core';
-import { TestBed, ComponentFixture, fakeAsync, tick, async } from '@angular/core/testing';
+import { TestBed, ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
 import { BrowserModule, By } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { TreeviewComponent } from './treeview.component';
@@ -23,8 +23,9 @@ const fakeData: FakeData = {
 };
 
 @Component({
-  selector: 'ngx-test',
-  template: ''
+    selector: 'ngx-test',
+    template: '',
+    standalone: false
 })
 class TestComponent {
   config = fakeData.config;
@@ -152,7 +153,7 @@ describe('TreeviewComponent', () => {
 
     it('should show icon on header with collapsed state', () => {
       const collapseExpandIcon = queryCollapseExpandIcon(fixture.debugElement);
-      expect(collapseExpandIcon.nativeElement).toHaveCssClass('fa-expand');
+      expect(collapseExpandIcon.query(By.css('svg.bi-arrows-angle-expand'))).not.toBeNull();
     });
   });
 
@@ -584,7 +585,7 @@ describe('TreeviewComponent', () => {
       });
 
       it('should have element class "fa-compress"', () => {
-        expect(collapseExpandIcon.nativeElement).toHaveCssClass('fa-compress');
+        expect(collapseExpandIcon.query(By.css('svg.bi-arrows-angle-contract'))).not.toBeNull();
       });
 
       it('should display "Item1" & "Item2"', () => {
@@ -600,7 +601,7 @@ describe('TreeviewComponent', () => {
         }));
 
         it('should have element class "fa-expand"', () => {
-          expect(collapseExpandIcon.nativeElement).toHaveCssClass('fa-expand');
+        expect(collapseExpandIcon.query(By.css('svg.bi-arrows-angle-expand'))).not.toBeNull();
         });
 
         it('should display "Item1" & "Item2"', () => {

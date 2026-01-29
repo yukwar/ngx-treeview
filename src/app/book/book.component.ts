@@ -3,11 +3,12 @@ import { TreeviewItem, TreeviewConfig } from 'ngx-treeview';
 import { BookService } from './book.service';
 
 @Component({
-  selector: 'ngx-book',
-  templateUrl: './book.component.html',
-  providers: [
-    BookService
-  ]
+    selector: 'ngx-book',
+    templateUrl: './book.component.html',
+    providers: [
+        BookService
+    ],
+    standalone: false
 })
 export class BookComponent implements OnInit {
   dropdownEnabled = true;

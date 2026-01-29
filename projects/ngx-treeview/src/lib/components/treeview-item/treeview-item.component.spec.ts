@@ -1,5 +1,5 @@
 import { Component, DebugElement, Injectable } from '@angular/core';
-import { TestBed, ComponentFixture, fakeAsync, tick, async, inject } from '@angular/core/testing';
+import { TestBed, ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
 import { BrowserModule, By } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { slice } from 'lodash';
@@ -7,7 +7,7 @@ import { expect, createGenericTestComponent } from '../../../testing';
 import { TreeviewConfig } from '../../models/treeview-config';
 import { TreeviewItemComponent } from '../treeview-item/treeview-item.component';
 import { TreeviewItem } from '../../models/treeview-item';
-import { fakeItemTemplate } from './treeview-item-template.spec';
+import { fakeItemTemplate } from '../../testings/treeview-item-template.spec';
 
 interface FakeData {
   item: TreeviewItem;
@@ -23,8 +23,9 @@ const testTemplate = fakeItemTemplate
   + '<ngx-treeview-item [item]="item" [template]="itemTemplate" (checkedChange)="checkedChange($event)"></ngx-treeview-item>';
 
 @Component({
-  selector: 'ngx-test',
-  template: '',
+    selector: 'ngx-test',
+    template: '',
+    standalone: false
 })
 class TestComponent {
   item = fakeData.item;

@@ -13,21 +13,20 @@ export abstract class TreeviewI18n {
 @Injectable()
 export class DefaultTreeviewI18n extends TreeviewI18n {
   getText(selection: TreeviewSelection): string {
-    if (selection.uncheckedItems.length === 0) {
-      if (selection.checkedItems.length > 0) {
-        return this.getAllCheckboxText();
-      } else {
-        return '';
-      }
+    const uncheckedItems = selection?.uncheckedItems ?? [];
+    const checkedItems = selection?.checkedItems ?? [];
+
+    if (uncheckedItems.length === 0) {
+      return this.getAllCheckboxText();
     }
 
-    switch (selection.checkedItems.length) {
+    switch (checkedItems.length) {
       case 0:
         return 'Select options';
       case 1:
-        return selection.checkedItems[0].text;
+        return checkedItems[0].text;
       default:
-        return `${selection.checkedItems.length} options selected`;
+        return `${checkedItems.length} options selected`;
     }
   }
 

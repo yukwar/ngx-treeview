@@ -164,6 +164,11 @@ describe('OrderDownlineTreeviewEventParser', () => {
     const item3 = new TreeviewItem({ text: 'Item3', value: 3 });
 
     beforeEach(() => {
+      item1.checked = false;
+      item1Child1.checked = true;
+      item1Child2.checked = false;
+      item2.checked = false;
+      item3.checked = true;
       fakeComponent.items = [item1, item2, item3];
       fakeComponent.selection = selectionWithUndefinedCheckedItems;
     });

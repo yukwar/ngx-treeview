@@ -4,14 +4,15 @@ import { TreeviewI18n, TreeviewItem, TreeviewConfig, DropdownTreeviewComponent, 
 import { DropdownTreeviewSelectI18n } from './dropdown-treeview-select-i18n';
 
 @Component({
-  selector: 'ngx-dropdown-treeview-select',
-  templateUrl: './dropdown-treeview-select.component.html',
-  styleUrls: [
-    './dropdown-treeview-select.component.scss'
-  ],
-  providers: [
-    { provide: TreeviewI18n, useClass: DropdownTreeviewSelectI18n }
-  ]
+    selector: 'ngx-dropdown-treeview-select',
+    templateUrl: './dropdown-treeview-select.component.html',
+    styleUrls: [
+        './dropdown-treeview-select.component.scss'
+    ],
+    providers: [
+        { provide: TreeviewI18n, useClass: DropdownTreeviewSelectI18n }
+    ],
+    standalone: false
 })
 export class DropdownTreeviewSelectComponent implements OnChanges {
   @Input() config: TreeviewConfig;

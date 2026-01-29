@@ -2,8 +2,9 @@ import { Directive, Input, Output, HostBinding, HostListener, EventEmitter } fro
 import { isNil } from 'lodash';
 
 @Directive({
-  selector: '[ngxDropdown]',
-  exportAs: 'ngxDropdown'
+    selector: '[ngxDropdown]',
+    exportAs: 'ngxDropdown',
+    standalone: false
 })
 export class DropdownDirective {
   toggleElement: any;
